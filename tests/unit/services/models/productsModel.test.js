@@ -17,11 +17,11 @@ describe('Testa o comportamento da camada productsModel.', () => {
       const productsDub = [
         {
           id: 1,
-          name: "Martelo de Thor",
+          name: 'Martelo de Thor',
         },
         {
           id: 2,
-          name: "Traje de encolhimento",
+          name: 'Traje de encolhimento',
         }
       ];
 
@@ -79,7 +79,7 @@ describe('Testa o comportamento da camada productsModel.', () => {
 
       const productDub = {
         id: 2,
-        name: "Traje de encolhimento",
+        name: 'Traje de encolhimento',
       };
 
       before(() => {
@@ -92,6 +92,31 @@ describe('Testa o comportamento da camada productsModel.', () => {
         const product = await productsModel.getById(id);
         expect(product).to.be.equal(productDub);
       });
+
+    });
+
+  });
+
+  describe('Testa comportamento do model "create"', () => {
+
+    afterEach(() => {
+      connection.execute.restore();
+    });
+
+    describe('Quando recebe um "name" válido', () => {
+
+      const insertId = 1;
+
+      before(() => {
+        const dbReturn = [{ insertId }];
+        sinon.stub(connection, 'execute').resolves(dbReturn);
+      });
+
+      it('Deve retornar o id do item adicionado.', async () => {
+        const productName = 'Capa da invisibilidade';
+        const newProductId = await productsModel.create(productName);
+        expect(newProductId).to.be.equals(insertId);
+      })
 
     });
 

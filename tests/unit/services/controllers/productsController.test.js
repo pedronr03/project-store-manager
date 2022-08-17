@@ -101,4 +101,40 @@ describe('Testa o comportamento da camada productsController.', () => {
 
   });
 
+  describe('Testa o comportamento do controller "create"', () => {
+
+    afterEach(() => {
+      productsService.create.restore();
+    });
+
+    describe('Quando o corpo da requisição recebe um "name" válido', () => {
+
+      const request = {};
+      const response = {};
+
+      const insertId = 1;
+
+      const newProductDub = {
+        id: insertId,
+        name: 'Capa da invisibilidade'
+      };
+
+      before(() => {
+        sinon.stub(productsService, 'create').resolves(newProductDub);
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+        request.body = { name: 'Capa da invisibilidade' };
+      });
+
+      it('Deve retornar o status "201", e um json contendo a chave name e id do respectivo produto adicionado.', async () => {
+        const STATUS_CODE = 201;
+        await productsController.create(request, response);
+        expect(response.status.calledWith(STATUS_CODE)).to.be.true;
+        expect(response.json.calledWith(newProductDub)).to.be.true;
+      });
+
+    });
+
+  });
+
 });
