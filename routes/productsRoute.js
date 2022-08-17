@@ -4,7 +4,7 @@ const authNewProduct = require('../middlewares/authNewProduct');
 
 const route = Router();
 
-route.post('/', authNewProduct);
+route.post('/', authNewProduct, productsController.create);
 
 route.get('/', productsController.getAll);
 
