@@ -1,7 +1,10 @@
 const { Router } = require('express');
 const productsController = require('../controllers/productsController');
+const authNewProduct = require('../middlewares/authNewProduct');
 
 const route = Router();
+
+route.post('/', authNewProduct);
 
 route.get('/', productsController.getAll);
 
