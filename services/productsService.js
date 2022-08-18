@@ -1,8 +1,8 @@
 const Products = require('../models/Products');
 const CustomError = require('../errors/CustomError');
 
-const getById = async (saleId) => {
-  const product = await Products.getById(saleId);
+const getById = async (id) => {
+  const product = await Products.getById(id);
   if (!product) throw new CustomError(404, 'NOT_FOUND', 'Product not found');
   return product;
 };
@@ -17,14 +17,20 @@ const create = async (name) => {
   return { id: newProductId, name };
 };
 
-const update = async (name, saleId) => {
-  const product = await Products.getById(saleId);
+const update = async (name, id) => {
+  const product = await Products.getById(id);
   if (!product) throw new CustomError(404, 'NOT_FOUND', 'Product not found');
-  await Products.update(name, saleId);
+  await Products.update(name, id);
   return {
     name,
-    id: saleId,
+    id,
   };
+};
+
+const deleteProduct = async (id) => {
+  const product = await Products.getById(id);
+  if (!product) throw new CustomError(404, 'NOT_FOUND', 'Product not found');
+  await Products.deleteProduct(id);
 };
 
 module.exports = {
@@ -32,4 +38,5 @@ module.exports = {
   getById,
   create,
   update,
+  deleteProduct,
 };

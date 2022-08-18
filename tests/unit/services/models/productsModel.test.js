@@ -152,5 +152,31 @@ describe('Testa o comportamento da camada productsModel.', () => {
 
   });
 
+  describe('Testa o comportamento do model "deleteProduct"', () => {
+
+    afterEach(() => {
+      connection.execute.restore();
+    });
+
+    describe('Quando recebe um id válido', () => {
+
+      const deleteId = 1;
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves();
+      });
+
+      it('Deve executar a query de delete.', async () => {
+        const query = `DELETE FROM StoreManager.products
+        WHERE id = ?;`;
+        const params = [deleteId];
+        await productsModel.deleteProduct(deleteId);
+        expect(connection.execute.calledWith(query, params));
+      });
+
+    });
+
+  });
+
 });
 

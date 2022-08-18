@@ -29,8 +29,8 @@ const getAll = async () => {
   return sales;
 };
 
-const getById = async (saleId) => {
-  const sale = await SalesProducts.getById(saleId);
+const getById = async (id) => {
+  const sale = await SalesProducts.getById(id);
   if (!sale.length) throw new CustomError(404, 'NOT_FOUND', 'Sale not found');
   return sale;
 };

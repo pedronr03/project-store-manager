@@ -42,11 +42,13 @@ describe('Testa o comportamento da camada salesService.', () => {
         itemsSold: salesItems,
       };
 
+      const insertId = 3;
+
       before(() => {
         sinon.stub(productsModel, 'getById')
           .onFirstCall().resolves(productDub1)
           .onSecondCall().resolves(productDub2);
-        sinon.stub(salesModel, 'create').resolves(3);
+        sinon.stub(salesModel, 'create').resolves(insertId);
         sinon.stub(salesProductModel, 'create').resolves();
       });
 
@@ -83,11 +85,13 @@ describe('Testa o comportamento da camada salesService.', () => {
       ];
 
       before(() => {
-        sinon.stub(salesService, 'validateCreate').resolves(false);
+        sinon.stub(productsModel, 'getById')
+          .onFirstCall().resolves(null)
+          .onSecondCall().resolves(salesItems[1]);
       });
 
       after(() => {
-        salesService.validateCreate.restore();
+        productsModel.getById.restore();
       });
 
       it('Deve retornar um erro.', () => {
@@ -95,7 +99,7 @@ describe('Testa o comportamento da camada salesService.', () => {
           .to.eventually.be.rejectedWith(error.message)
           .and.be.an.instanceOf(CustomError)
           .and.to.includes(error);
-      })
+      });
 
     });
 

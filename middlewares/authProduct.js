@@ -1,7 +1,7 @@
 const productsSchema = require('../schemas/productsSchema');
 const CustomError = require('../errors/CustomError');
 
-const authNewProduct = (req, _res, next) => {
+const authProduct = (req, _res, next) => {
   const { error } = productsSchema.newProductSchema.validate(req.body);
   const errorMessage = error && error.message;
   switch (errorMessage) {
@@ -14,4 +14,4 @@ const authNewProduct = (req, _res, next) => {
   }
 };
 
-module.exports = authNewProduct;
+module.exports = authProduct;

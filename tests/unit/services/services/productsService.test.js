@@ -131,11 +131,7 @@ describe('Testa o comportamento da camada productsService.', () => {
 
   });
 
-  describe('Testa o comportamento do model "update"', () => {
-
-    afterEach(() => {
-      productsModel.update.restore();
-    });
+  describe('Testa o comportamento do service "update"', () => {
 
     describe('Quando recebe name e id válido.', () => {
 
@@ -144,8 +140,19 @@ describe('Testa o comportamento da camada productsService.', () => {
         name: 'Capa da invisibilidade'
       };
 
+      const productDub = {
+        "id": 1,
+        "name": "Martelo de Thor",
+      };
+
       before(() => {
         sinon.stub(productsModel, 'update').resolves();
+        sinon.stub(productsModel, 'getById').resolves(productDub);
+      });
+
+      after(() => {
+        productsModel.update.restore();
+        productsModel.getById.restore();
       });
 
       it('Deve retornar um objeto contendo a chave name e id.', async () => {
@@ -169,11 +176,72 @@ describe('Testa o comportamento da camada productsService.', () => {
       };
 
       before(() => {
-        sinon.stub(productsModel, 'update').resolves();
+        sinon.stub(productsModel, 'getById').resolves(null);
+      });
+
+      after(() => {
+        productsModel.getById.restore();
       });
 
       it('Deve retornar um erro.', async () => {
         return expect(productsService.update(updatedProductDub.name, updatedProductDub.id))
+          .to.eventually.be.rejectedWith(error.message)
+          .and.be.an.instanceOf(CustomError)
+          .and.to.includes(error);
+      });
+
+    });
+
+  });
+
+  describe('Testa o comportamento do service "deleteProduct"', () => {
+
+    describe('Quando recebe um id válido.', () => {
+
+      const productDub = {
+        "id": 1,
+        "name": "Martelo de Thor",
+      };
+
+      const deleteId = 1;
+
+      before(() => {
+        sinon.stub(productsModel, 'deleteProduct').resolves();
+        sinon.stub(productsModel, 'getById').resolves(productDub);
+      });
+
+      after(() => {
+        productsModel.getById.restore();
+        productsModel.deleteProduct.restore();
+      });
+
+      it('Deve retornar um objeto contendo a chave name e id.', async () => {
+        await productsService.deleteProduct(deleteId);
+        expect(productsModel.deleteProduct.calledWith(deleteId)).to.be.true;
+      });
+
+    });
+
+    describe('Quando recebe um id inválido.', () => {
+
+      const deleteId = 500;
+
+      const error = {
+        message: 'Product not found',
+        code: 'NOT_FOUND',
+        status: 404
+      };
+
+      before(() => {
+        sinon.stub(productsModel, 'getById').resolves(null);
+      });
+
+      after(() => {
+        productsModel.getById.restore();
+      });
+
+      it('Deve retornar um erro.', async () => {
+        return expect(productsService.deleteProduct(deleteId))
           .to.eventually.be.rejectedWith(error.message)
           .and.be.an.instanceOf(CustomError)
           .and.to.includes(error);

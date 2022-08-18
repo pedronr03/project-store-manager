@@ -174,4 +174,35 @@ describe('Testa o comportamento da camada productsController.', () => {
 
   });
 
+  describe('Testa o comportamento do controller "deleteProduct"', () => {
+
+    afterEach(() => {
+      productsService.deleteProduct.restore();
+    });
+
+    describe('Quando a requisição recebe um "id" no parâmetro', () => {
+
+      const request = {};
+      const response = {};
+
+      const deleteId = 1;
+
+      before(() => {
+        sinon.stub(productsService, 'deleteProduct').resolves();
+        response.status = sinon.stub().returns(response);
+        response.send = sinon.stub().returns();
+        request.params = { id: deleteId };
+      });
+
+      it('Deve retornar o status "204".', async () => {
+        const STATUS_CODE = 204;
+        await productsController.deleteProduct(request, response);
+        expect(response.status.calledWith(STATUS_CODE)).to.be.true;
+        expect(response.send.calledWith()).to.be.true;
+      });
+
+    });
+
+  });
+
 });
