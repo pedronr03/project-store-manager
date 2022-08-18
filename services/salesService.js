@@ -14,23 +14,23 @@ const validateCreate = async (saleItems) => {
 const create = async (salesItems) => {
   const saleIsValid = await validateCreate(salesItems);
   if (!saleIsValid) throw new CustomError(404, 'NOT_FOUND', 'Product not found');
-  const saleId = await SalesProducts.create();
+  const saleId = await Sales.create();
   const successReturn = {
     id: saleId,
     itemsSold: salesItems,
   };
   const newSalesItems = salesItems.map((item) => ({ ...item, saleId }));
-  await Promise.all(newSalesItems.map((item) => Sales.create(item)));
+  await Promise.all(newSalesItems.map((item) => SalesProducts.create(item)));
   return successReturn;
 };
 
 const getAll = async () => {
-  const sales = await Sales.getAll();
+  const sales = await SalesProducts.getAll();
   return sales;
 };
 
 const getById = async (saleId) => {
-  const sale = await Sales.getById(saleId);
+  const sale = await SalesProducts.getById(saleId);
   if (!sale.length) throw new CustomError(404, 'NOT_FOUND', 'Sale not found');
   return sale;
 };

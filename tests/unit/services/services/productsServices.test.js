@@ -131,4 +131,56 @@ describe('Testa o comportamento da camada productsService.', () => {
 
   });
 
+  describe('Testa o comportamento do model "update"', () => {
+
+    afterEach(() => {
+      productsModel.update.restore();
+    });
+
+    describe('Quando recebe name e id válido.', () => {
+
+      const updateDub = {
+        id: 1,
+        name: 'Capa da invisibilidade'
+      };
+
+      before(() => {
+        sinon.stub(productsModel, 'update').resolves();
+      });
+
+      it('Deve retornar um objeto contendo a chave name e id.', async () => {
+        const update = await productsService.update(updateDub.name, updateDub.id);
+        expect(update).to.be.eql(updateDub);
+      });
+
+    });
+
+    describe('Quando recebe um id inválido.', () => {
+
+      const updatedProductDub = {
+        id: 10,
+        name: 'Capa da invisibilidade'
+      };
+
+      const error = {
+        message: 'Product not found',
+        code: 'NOT_FOUND',
+        status: 404
+      };
+
+      before(() => {
+        sinon.stub(productsModel, 'update').resolves();
+      });
+
+      it('Deve retornar um erro.', async () => {
+        return expect(productsService.update(updatedProductDub.name, updatedProductDub.id))
+          .to.eventually.be.rejectedWith(error.message)
+          .and.be.an.instanceOf(CustomError)
+          .and.to.includes(error);
+      });
+
+    });
+
+  });
+
 });

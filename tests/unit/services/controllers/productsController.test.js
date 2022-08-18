@@ -137,4 +137,41 @@ describe('Testa o comportamento da camada productsController.', () => {
 
   });
 
+  describe('Testa o comportamento do controller "update"', () => {
+
+    afterEach(() => {
+      productsService.update.restore();
+    });
+
+    describe('Quando o corpo da requisição recebe um "name" válido e um "id" no parâmetro', () => {
+
+      const request = {};
+      const response = {};
+
+      const insertId = 1;
+
+      const updatedProductDub = {
+        id: insertId,
+        name: 'Capa da invisibilidade'
+      };
+
+      before(() => {
+        sinon.stub(productsService, 'update').resolves(updatedProductDub);
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+        request.body = { name: 'Capa da invisibilidade' };
+        request.params = { id: insertId };
+      });
+
+      it('Deve retornar o status "201", e um json contendo a chave name e id do respectivo produto adicionado.', async () => {
+        const STATUS_CODE = 200;
+        await productsController.update(request, response);
+        expect(response.status.calledWith(STATUS_CODE)).to.be.true;
+        expect(response.json.calledWith(updatedProductDub)).to.be.true;
+      });
+
+    });
+
+  });
+
 });

@@ -6,6 +6,7 @@ const route = Router();
 
 route.post('/', authNewSale, salesController.create);
 route.get('/:id', salesController.getById);
+// route.put('/:id');
 route.get('/', salesController.getAll);
 
 module.exports = route;

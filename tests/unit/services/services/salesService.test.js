@@ -46,13 +46,13 @@ describe('Testa o comportamento da camada salesService.', () => {
         sinon.stub(productsModel, 'getById')
           .onFirstCall().resolves(productDub1)
           .onSecondCall().resolves(productDub2);
-        sinon.stub(salesProductModel, 'create').resolves(3);
-        sinon.stub(salesModel, 'create').resolves();
+        sinon.stub(salesModel, 'create').resolves(3);
+        sinon.stub(salesProductModel, 'create').resolves();
       });
 
       after(() => {
-        salesProductModel.create.restore();
         salesModel.create.restore();
+        salesProductModel.create.restore();
         productsModel.getById.restore();
       });
 
@@ -104,7 +104,7 @@ describe('Testa o comportamento da camada salesService.', () => {
   describe('Testa o comportamento do service "getAll"', () => {
 
     afterEach(() => {
-      salesModel.getAll.restore();
+      salesProductModel.getAll.restore();
     });
 
     describe('Quando a tabela está populada', () => {
@@ -125,7 +125,7 @@ describe('Testa o comportamento da camada salesService.', () => {
       ];
 
       before(() => {
-        sinon.stub(salesModel, 'getAll').resolves(salesDub);
+        sinon.stub(salesProductModel, 'getAll').resolves(salesDub);
       });
 
       it('Deve retornar um array contendo todas as vendas.', async () => {
@@ -153,7 +153,7 @@ describe('Testa o comportamento da camada salesService.', () => {
       ];
 
       before(() => {
-        sinon.stub(salesModel, 'getAll').resolves(salesDub);
+        sinon.stub(salesProductModel, 'getAll').resolves(salesDub);
       });
 
       it('Deve retornar um array vázio.', async () => {
@@ -168,7 +168,7 @@ describe('Testa o comportamento da camada salesService.', () => {
   describe('Testa o comportamento do service "getById"', () => {
 
     afterEach(() => {
-      salesModel.getById.restore();
+      salesProductModel.getById.restore();
     });
 
     describe('Quando recebe um id válido', () => {
@@ -189,7 +189,7 @@ describe('Testa o comportamento da camada salesService.', () => {
       ];
 
       before(() => {
-        sinon.stub(salesModel, 'getById').resolves(saleDub);
+        sinon.stub(salesProductModel, 'getById').resolves(saleDub);
       });
 
       it('Deve retornar um array com produtos da venda do id recebido. ', async () => {
@@ -212,7 +212,7 @@ describe('Testa o comportamento da camada salesService.', () => {
       };
 
       before(() => {
-        sinon.stub(salesModel, 'getById').resolves(saleDub);
+        sinon.stub(salesProductModel, 'getById').resolves(saleDub);
       });
 
       it('Deve retornar um erro. ', async () => {

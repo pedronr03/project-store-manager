@@ -122,5 +122,35 @@ describe('Testa o comportamento da camada productsModel.', () => {
 
   });
 
+  describe('Testa o comportamento do model "update"', () => {
+
+    afterEach(() => {
+      connection.execute.restore();
+    });
+
+    describe('Quando recebe um name e um id válido', () => {
+
+      const updateDub = {
+        name: 'Manto da invisibilidade',
+        id: 1,
+      }
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves();
+      });
+
+      it('Deve executar a query de update.', async () => {
+        const query = `UPDATE StoreManager.products
+        SET name = ?
+        WHERE id = ?;`;
+        const params = [updateDub.name, updateDub.id];
+        await productsModel.update(updateDub.name, updateDub.id);
+        expect(connection.execute.calledWith(query, params));
+      });
+
+    });
+
+  });
+
 });
 
