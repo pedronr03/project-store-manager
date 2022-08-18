@@ -24,7 +24,20 @@ const create = async (salesItems) => {
   return successReturn;
 };
 
+const getAll = async () => {
+  const sales = await Sales.getAll();
+  return sales;
+};
+
+const getById = async (saleId) => {
+  const sale = await Sales.getById(saleId);
+  if (!sale.length) throw new CustomError(404, 'NOT_FOUND', 'Sale not found');
+  return sale;
+};
+
 module.exports = {
   create,
   validateCreate,
+  getById,
+  getAll,
 };
