@@ -74,7 +74,7 @@ describe('Testa o comportamento da camada productsService.', () => {
         sinon.stub(productsModel, 'getById').resolves(null);
       });
 
-      it('Deve retornar um error.', async () => {
+      it('Deve retornar um error.', () => {
         return expect(productsService.getById(100))
           .to.eventually.be.rejectedWith(error.message)
           .and.be.an.instanceOf(CustomError)

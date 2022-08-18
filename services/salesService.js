@@ -26,4 +26,5 @@ const create = async (salesItems) => {
 
 module.exports = {
   create,
+  validateCreate,
 };
