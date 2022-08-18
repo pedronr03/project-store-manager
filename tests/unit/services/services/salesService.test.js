@@ -101,4 +101,129 @@ describe('Testa o comportamento da camada salesService.', () => {
 
   });
 
+  describe('Testa o comportamento do service "getAll"', () => {
+
+    afterEach(() => {
+      salesModel.getAll.restore();
+    });
+
+    describe('Quando a tabela está populada', () => {
+
+      const salesDub = [
+        {
+          "saleId": 1,
+          "date": "2021-09-09T04:54:29.000Z",
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "saleId": 1,
+          "date": "2021-09-09T04:54:54.000Z",
+          "productId": 2,
+          "quantity": 2
+        }
+      ];
+
+      before(() => {
+        sinon.stub(salesModel, 'getAll').resolves(salesDub);
+      });
+
+      it('Deve retornar um array contendo todas as vendas.', async () => {
+        const sales = await salesService.getAll();
+        expect(sales).to.be.equal(salesDub);
+      });
+
+    });
+
+    describe('Quando a tabela não está populada', () => {
+
+      const salesDub = [
+        {
+          "saleId": 1,
+          "date": "2021-09-09T04:54:29.000Z",
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "saleId": 1,
+          "date": "2021-09-09T04:54:54.000Z",
+          "productId": 2,
+          "quantity": 2
+        }
+      ];
+
+      before(() => {
+        sinon.stub(salesModel, 'getAll').resolves(salesDub);
+      });
+
+      it('Deve retornar um array vázio.', async () => {
+        const sales = await salesService.getAll();
+        expect(sales).to.be.equal(salesDub);
+      });
+
+    });
+
+  });
+
+  describe('Testa o comportamento do service "getById"', () => {
+
+    afterEach(() => {
+      salesModel.getById.restore();
+    });
+
+    describe('Quando recebe um id válido', () => {
+
+      const saleId = 1;
+
+      const saleDub = [
+        {
+          "date": "2021-09-09T04:54:29.000Z",
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "date": "2021-09-09T04:54:54.000Z",
+          "productId": 2,
+          "quantity": 2
+        }
+      ];
+
+      before(() => {
+        sinon.stub(salesModel, 'getById').resolves(saleDub);
+      });
+
+      it('Deve retornar um array com produtos da venda do id recebido. ', async () => {
+        const sale = await salesService.getById(saleId);
+        expect(sale).to.be.equal(saleDub);
+      });
+
+    });
+
+    describe('Quando recebe um id inválido', () => {
+
+      const saleId = 5;
+
+      const saleDub = [];
+
+      const error = {
+        message: 'Sale not found',
+        code: 'NOT_FOUND',
+        status: 404
+      };
+
+      before(() => {
+        sinon.stub(salesModel, 'getById').resolves(saleDub);
+      });
+
+      it('Deve retornar um erro. ', async () => {
+        return expect(salesService.getById(saleId))
+          .to.eventually.be.rejectedWith(error.message)
+          .and.be.an.instanceOf(CustomError)
+          .and.to.includes(error);
+      });
+
+    });
+
+  });
+
 });
