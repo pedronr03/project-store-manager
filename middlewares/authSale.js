@@ -1,7 +1,7 @@
 const salesSchema = require('../schemas/salesSchema');
 const CustomError = require('../errors/CustomError');
 
-const authNewSale = async (req, _res, next) => {
+const authSale = async (req, _res, next) => {
   const { body } = req;
   const errorMessage = body.map((productItem) => {
     const { error } = salesSchema.saleItemSchema.validate(productItem);
@@ -19,4 +19,4 @@ const authNewSale = async (req, _res, next) => {
   }
 };
 
-module.exports = authNewSale;
+module.exports = authSale;

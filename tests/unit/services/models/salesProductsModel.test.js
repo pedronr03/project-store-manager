@@ -125,32 +125,25 @@ describe('Testa o comportamento da camada salesProductsModel.', () => {
 
   });
 
-  describe('Testa o comportamento do model "update"', () => {
+  describe('Testa o comportamento do model "deleteBySaleId"', () => {
 
     afterEach(() => {
       connection.execute.restore();
     });
 
-    describe('Quando recebe um objeto com as informações do item', () => {
+    describe('Quando recebe um id da sale', () => {
 
-      const productDub = {
-        productId: 1,
-        quantity: 1,
-        saleId: 3
-      };
+      const saleId = 3;
 
       before(() => {
         sinon.stub(connection, 'execute').resolves();
       });
 
-      it('Deve executar uma query para atualizar o item do banco de dados.', async () => {
-        const { productId, saleId, quantity } = productDub;
-        const query = `UPDATE StoreManager.sales
-        SET product_id = ?,
-        quantity = ?
+      it('Deve executar uma query para deletar os itens do banco de dados.', async () => {
+        const query = `DELETE FROM StoreManager.sale_products
         WHERE sale_id = ?;`;
-        const params = [productId, saleId, quantity];
-        await salesProductsModel.update(productDub);
+        const params = [saleId];
+        await salesProductsModel.deleteBySaleId(saleId);
         expect(connection.execute.calledWith(query, params));
       });
 

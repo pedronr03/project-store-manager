@@ -9,6 +9,7 @@ const salesProductModel = require('../../../../models/SalesProducts');
 const productsModel = require('../../../../models/Products');
 const salesService = require('../../../../services/salesService');
 const CustomError = require('../../../../errors/CustomError');
+const connection = require("../../../../models/connection");
 
 describe('Testa o comportamento da camada salesService.', () => {
 
@@ -221,6 +222,155 @@ describe('Testa o comportamento da camada salesService.', () => {
 
       it('Deve retornar um erro. ', async () => {
         return expect(salesService.getById(saleId))
+          .to.eventually.be.rejectedWith(error.message)
+          .and.be.an.instanceOf(CustomError)
+          .and.to.includes(error);
+      });
+
+    });
+
+  });
+
+  describe('Testa o comportamento do service "update"', () => {
+
+    afterEach(() => {
+      salesProductModel.getById.restore();
+    });
+
+    describe('Quando recebe o saleId e um saleItems válido', () => {
+
+      const saleId = 1;
+
+      const salesItems = [
+        {
+          "productId": 1,
+          "quantity": 10
+        },
+        {
+          "productId": 2,
+          "quantity": 50
+        }
+      ];
+
+      const saleDub = [
+        {
+          "date": "2021-09-09T04:54:29.000Z",
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "date": "2021-09-09T04:54:54.000Z",
+          "productId": 2,
+          "quantity": 2
+        }
+      ];
+
+      const successReturn = {
+        saleId,
+        itemsUpdated: salesItems,
+      };
+
+      before(() => {
+        sinon.stub(salesProductModel, 'getById').resolves(saleDub);
+        sinon.stub(productsModel, 'getById').resolves(true);
+        sinon.stub(salesProductModel, 'deleteBySaleId').resolves();
+        sinon.stub(salesProductModel, 'create').resolves();
+      });
+
+      after(() => {
+        salesProductModel.create.restore();
+        salesProductModel.deleteBySaleId.restore();
+        productsModel.getById.restore();
+      });
+
+      it('Deve retornar um objeto contendo o id da venda e um array contendo os produtos atualizados.', async () => {
+        const update = await salesService.update(saleId, salesItems);
+        expect(update).to.be.eql(successReturn);
+      });
+
+    });
+
+    describe('Quando recebe o saleId inválido', () => {
+
+      const saleId = 500;
+
+      const salesItems = [
+        {
+          "productId": 1,
+          "quantity": 10
+        },
+        {
+          "productId": 2,
+          "quantity": 50
+        }
+      ];
+
+      const error = {
+        message: 'Sale not found',
+        code: 'NOT_FOUND',
+        status: 404
+      };
+
+      const saleDub = [];
+
+      before(() => {
+        sinon.stub(salesProductModel, 'getById').resolves(saleDub);
+      });
+
+      it('Deve retornar um erro.', async () => {
+        return expect(salesService.update(saleId, salesItems))
+          .to.eventually.be.rejectedWith(error.message)
+          .and.be.an.instanceOf(CustomError)
+          .and.to.includes(error);
+      });
+
+    });
+
+    describe('Quando recebe o saleItems inválido', () => {
+
+      const saleId = 1;
+
+      const salesItems = [
+        {
+          "productId": 300,
+          "quantity": 10
+        },
+        {
+          "productId": 2,
+          "quantity": 50
+        }
+      ];
+
+      const error = {
+        message: 'Product not found',
+        code: 'NOT_FOUND',
+        status: 404
+      };
+
+      const saleDub = [
+        {
+          "date": "2021-09-09T04:54:29.000Z",
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "date": "2021-09-09T04:54:54.000Z",
+          "productId": 2,
+          "quantity": 2
+        }
+      ];
+
+      before(() => {
+        sinon.stub(salesProductModel, 'getById').resolves(saleDub);
+        sinon.stub(productsModel, 'getById').resolves(false);
+      });
+
+      after(() => {
+        productsModel.getById.restore();
+      });
+
+      it('Deve retornar um erro.', async () => {
+        return expect(salesService.update(saleId, salesItems))
           .to.eventually.be.rejectedWith(error.message)
           .and.be.an.instanceOf(CustomError)
           .and.to.includes(error);

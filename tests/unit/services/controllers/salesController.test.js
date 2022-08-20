@@ -45,7 +45,7 @@ describe('Testa o comportamento da camada salesController.', () => {
         await salesController.create(request, response);
         expect(response.status.calledWith(STATUS_CODE)).to.be.true;
         expect(response.json.calledWith(successReturn)).to.be.true;
-      })
+      });
 
     });
 
@@ -153,6 +153,51 @@ describe('Testa o comportamento da camada salesController.', () => {
         await salesController.getById(request, response);
         expect(response.status.calledWith(STATUS_CODE)).to.be.true;
         expect(response.json.calledWith(saleDub)).to.be.true;
+      });
+
+    });
+
+  });
+
+  describe('Testa o comportamento do controller "update"', () => {
+
+    afterEach(() => {
+      salesService.update.restore();
+    });
+
+    describe('Quando recebe um array de produtos no body da requisição e um id no params', () => {
+
+      const request = {};
+      const response = {};
+
+      const salesItems = [
+        {
+          "productId": 1,
+          "quantity": 10
+        },
+        {
+          "productId": 2,
+          "quantity": 50
+        }
+      ];
+
+      const successReturn = {
+        saleId: 1,
+        itemsUpdated: salesItems,
+      };
+
+      before(() => {
+        sinon.stub(salesService, 'update').resolves(successReturn);
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+        request.params = { id: 1 };
+      })
+
+      it('Deve retornar o status "201" com um json contendo um objeto com a chave saleId e itemsUpdated.', async () => {
+        const STATUS_CODE = 200;
+        await salesController.update(request, response);
+        expect(response.status.calledWith(STATUS_CODE)).to.be.true;
+        expect(response.json.calledWith(successReturn)).to.be.true;
       });
 
     });

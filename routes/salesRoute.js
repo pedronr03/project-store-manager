@@ -1,12 +1,14 @@
 const { Router } = require('express');
 const salesController = require('../controllers/salesController');
-const authNewSale = require('../middlewares/authNewSale');
+const authSale = require('../middlewares/authSale');
 
 const route = Router();
 
-route.post('/', authNewSale, salesController.create);
-
 route.get('/:id', salesController.getById);
+
+route.put('/:id', authSale, salesController.update);
+
+route.post('/', authSale, salesController.create);
 
 route.get('/', salesController.getAll);
 

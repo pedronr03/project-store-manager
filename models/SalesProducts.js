@@ -8,12 +8,10 @@ const create = async ({ productId, quantity, saleId }) => {
   return insertId;
 };
 
-const update = async ({ productId, saleId, quantity }) => {
-  const query = `UPDATE StoreManager.sales
-  SET product_id = ?,
-  quantity = ?
+const deleteBySaleId = async (saleId) => {
+  const query = `DELETE FROM StoreManager.sales_products
   WHERE sale_id = ?;`;
-  const params = [productId, quantity, saleId];
+  const params = [saleId];
   await connection.execute(query, params);
 };
 
@@ -37,7 +35,7 @@ const getById = async (saleId) => {
 
 module.exports = {
   create,
-  update,
   getAll,
   getById,
+  deleteBySaleId,
 };
