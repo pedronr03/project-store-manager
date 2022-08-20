@@ -35,7 +35,6 @@ describe('Testa o comportamento da camada productsController.', () => {
       });
 
       it('Deve retornar o status "200" e um json com um array de produtos.', async () => {
-        console.log(JSON.stringify(productsService.getAll));
         const STATUS_CODE = 200;
         await productsController.getAll(request, response);
         expect(response.status.calledWith(STATUS_CODE)).to.be.true;
@@ -199,6 +198,43 @@ describe('Testa o comportamento da camada productsController.', () => {
         await productsController.deleteProduct(request, response);
         expect(response.status.calledWith(STATUS_CODE)).to.be.true;
         expect(response.send.calledWith()).to.be.true;
+      });
+
+    });
+
+  });
+
+  describe('Testa o comportamento do controller "search"', () => {
+
+    afterEach(() => {
+      productsService.search.restore();
+    });
+
+    describe('Quando recebe uma query válida', () => {
+
+      const request = {};
+      const response = {};
+
+      const query = 'Thor';
+
+      const productsDub = [
+        {
+          id: 1,
+          name: 'Martelo de Thor',
+        }
+      ];
+
+      before(() => {
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+        request.query = { q: query };
+        sinon.stub(productsService, 'search').resolves(productsDub);
+      });
+
+      it('Deve retornar um array contendo os produtos baseados na query.', async () => {
+        await productsController.search(request, response);
+        expect(response.status.calledWith(200)).to.be.true;
+        expect(response.json.calledWith(productsDub)).to.be.true;
       });
 
     });

@@ -4,6 +4,8 @@ const authProduct = require('../middlewares/authProduct');
 
 const route = Router();
 
+route.get('/search', productsController.search);
+
 route.get('/:id', productsController.getById);
 
 route.put('/:id', authProduct, productsController.update);

@@ -125,4 +125,37 @@ describe('Testa o comportamento da camada salesProductsModel.', () => {
 
   });
 
+  describe('Testa o comportamento do model "update"', () => {
+
+    afterEach(() => {
+      connection.execute.restore();
+    });
+
+    describe('Quando recebe um objeto com as informações do item', () => {
+
+      const productDub = {
+        productId: 1,
+        quantity: 1,
+        saleId: 3
+      };
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves();
+      });
+
+      it('Deve executar uma query para atualizar o item do banco de dados.', async () => {
+        const { productId, saleId, quantity } = productDub;
+        const query = `UPDATE StoreManager.sales
+        SET product_id = ?,
+        quantity = ?
+        WHERE sale_id = ?;`;
+        const params = [productId, saleId, quantity];
+        await salesProductsModel.update(productDub);
+        expect(connection.execute.calledWith(query, params));
+      });
+
+    });
+
+  });
+
 });

@@ -178,5 +178,55 @@ describe('Testa o comportamento da camada productsModel.', () => {
 
   });
 
+  describe('Testa o comportamento do model "search"', () => {
+
+    afterEach(() => {
+      connection.execute.restore();
+    });
+
+    describe('Quando recebe uma query que existe no banco de dados', () => {
+
+      const query = '%Thor%';
+
+      const productsDub = [
+        {
+          id: 1,
+          name: 'Martelo de Thor',
+        }
+      ];
+
+      before(() => {
+        const dbReturn = [productsDub];
+        sinon.stub(connection, 'execute').resolves(dbReturn);
+      });
+
+      it('Deve retornar um array contendo os items baseados na query.', async () => {
+        const search = await productsModel.search(query);
+        console.log(search, productsDub);
+        expect(search).to.be.equal(productsDub);
+      });
+
+    });
+
+    describe('Quando recebe uma query que não existe no banco de dados', () => {
+
+      const query = '%Joia do infinito%';
+
+      const productsDub = [];
+
+      before(() => {
+        const dbReturn = [productsDub];
+        sinon.stub(connection, 'execute').resolves(dbReturn);
+      });
+
+      it('Deve retornar um array vázio.', async () => {
+        const search = await productsModel.search(query);
+        expect(search).to.be.equal(productsDub);
+      });
+
+    });
+
+  });
+
 });
 

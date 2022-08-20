@@ -251,4 +251,60 @@ describe('Testa o comportamento da camada productsService.', () => {
 
   });
 
+  describe('Testa o comportamento do service "search"', () => {
+
+    afterEach(() => {
+      productsModel.search.restore();
+    });
+
+    describe('Quando recebe uma query válida', () => {
+
+      const query = 'Thor';
+
+      const productsDub = [
+        {
+          id: 1,
+          name: 'Martelo de Thor',
+        }
+      ];
+
+      before(() => {
+        sinon.stub(productsModel, 'search').resolves(productsDub);
+      });
+
+      it('Deve retornar um array contendo os produtos baseados na query.', async () => {
+        const search = await productsService.search(query);
+        expect(search).to.be.equal(productsDub);
+      });
+
+    });
+
+    describe('Quando recebe uma query inválida', () => {
+
+      const query = undefined;
+
+      const productsDub = [
+        {
+          id: 1,
+          name: 'Martelo de Thor',
+        },
+        {
+          id: 2,
+          name: 'Traje de encolhimento',
+        }
+      ];
+
+      before(() => {
+        sinon.stub(productsModel, 'search').resolves(productsDub);
+      });
+
+      it('Deve retornar um array contendo todos os produtos.', async () => {
+        const search = await productsService.search(query);
+        expect(search).to.be.equal(productsDub);
+      });
+
+    });
+
+  });
+
 });

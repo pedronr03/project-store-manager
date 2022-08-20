@@ -33,10 +33,17 @@ const deleteProduct = async (id) => {
   await Products.deleteProduct(id);
 };
 
+const search = async (q) => {
+  const formatedQuery = q ? `%${q}%` : '%%';
+  const products = await Products.search(formatedQuery);
+  return products;
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
   deleteProduct,
+  search,
 };
