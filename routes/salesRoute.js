@@ -6,6 +6,8 @@ const route = Router();
 
 route.get('/:id', salesController.getById);
 
+route.delete('/:id', salesController.deleteSale);
+
 route.put('/:id', authSale, salesController.update);
 
 route.post('/', authSale, salesController.create);

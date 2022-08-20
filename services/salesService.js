@@ -11,6 +11,12 @@ const validateProducts = async (saleItems) => {
   return true;
 };
 
+const deleteSale = async (saleId) => {
+  const saleIsValid = await SalesProducts.getById(saleId);
+  if (!saleIsValid.length) throw new CustomError(404, 'NOT_FOUND', 'Sale not found');
+  await Sales.deleteSale(saleId);
+};
+
 const create = async (salesItems) => {
   const productsAreValid = await validateProducts(salesItems);
   if (!productsAreValid) throw new CustomError(404, 'NOT_FOUND', 'Product not found');
@@ -56,4 +62,5 @@ module.exports = {
   getById,
   getAll,
   update,
+  deleteSale,
 };

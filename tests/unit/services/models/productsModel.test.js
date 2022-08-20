@@ -202,7 +202,6 @@ describe('Testa o comportamento da camada productsModel.', () => {
 
       it('Deve retornar um array contendo os items baseados na query.', async () => {
         const search = await productsModel.search(query);
-        console.log(search, productsDub);
         expect(search).to.be.equal(productsDub);
       });
 

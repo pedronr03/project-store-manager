@@ -380,4 +380,70 @@ describe('Testa o comportamento da camada salesService.', () => {
 
   });
 
+  describe('Testa o comportamento do service "deleteSale"', () => {
+
+    afterEach(() => {
+      salesProductModel.getById.restore();
+    });
+
+    describe('Quando recebe um saleId válido', () => {
+
+      const saleId = 1;
+
+      const saleDub = [
+        {
+          "date": "2021-09-09T04:54:29.000Z",
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "date": "2021-09-09T04:54:54.000Z",
+          "productId": 2,
+          "quantity": 2
+        }
+      ];
+
+      before(() => {
+        sinon.stub(salesModel, 'deleteSale').resolves();
+        sinon.stub(salesProductModel, 'getById').resolves(saleDub);
+      });
+
+      after(() => {
+        salesModel.deleteSale.restore();
+      });
+
+      it('Deve chamar o model "deleteSale".', async () => {
+        await salesService.deleteSale(saleId);
+        expect(salesModel.deleteSale.calledWith(saleId)).to.be.true;
+      });
+
+    });
+
+    describe('Quando recebe um saleId inválido', () => {
+
+      const saleId = 500;
+
+      const saleDub = [];
+
+      const error = {
+        message: 'Sale not found',
+        code: 'NOT_FOUND',
+        status: 404
+      };
+
+      before(() => {
+        sinon.stub(salesProductModel, 'getById').resolves(saleDub);
+      });
+
+      it('Deve chamar o model "deleteSale".', async () => {
+        return expect(salesService.deleteSale(saleId))
+          .to.eventually.be.rejectedWith(error.message)
+          .and.be.an.instanceOf(CustomError)
+          .and.to.includes(error);
+      });
+
+    });
+
+  });
+
 });

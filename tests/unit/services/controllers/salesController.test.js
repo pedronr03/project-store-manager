@@ -191,13 +191,42 @@ describe('Testa o comportamento da camada salesController.', () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
         request.params = { id: 1 };
-      })
+      });
 
       it('Deve retornar o status "201" com um json contendo um objeto com a chave saleId e itemsUpdated.', async () => {
         const STATUS_CODE = 200;
         await salesController.update(request, response);
         expect(response.status.calledWith(STATUS_CODE)).to.be.true;
         expect(response.json.calledWith(successReturn)).to.be.true;
+      });
+
+    });
+
+  });
+
+  describe('Testa o comportamento do controller "deleteSale"', () => {
+
+    afterEach(() => {
+      salesService.deleteSale.restore();
+    });
+
+    describe('Quando recebe um id no params', () => {
+
+      const request = {};
+      const response = {};
+
+      before(() => {
+        sinon.stub(salesService, 'deleteSale').resolves();
+        response.status = sinon.stub().returns(response);
+        response.end = sinon.stub().returns();
+        request.params = { id: 1 };
+      });
+
+      it('Deve retornar um status "204".', async () => {
+        const STATUS_CODE = 204;
+        await salesController.deleteSale(request, response);
+        expect(response.status.calledWith(STATUS_CODE)).to.be.true;
+        expect(response.end.calledWith()).to.be.true;
       });
 
     });
