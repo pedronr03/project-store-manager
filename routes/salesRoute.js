@@ -1,17 +1,18 @@
 const { Router } = require('express');
+const rescue = require('express-rescue');
 const salesController = require('../controllers/salesController');
 const authSale = require('../middlewares/authSale');
 
 const route = Router();
 
-route.get('/:id', salesController.getById);
+route.get('/:id', rescue(salesController.getById));
 
-route.delete('/:id', salesController.deleteSale);
+route.delete('/:id', rescue(salesController.deleteSale));
 
-route.put('/:id', authSale, salesController.update);
+route.put('/:id', rescue(authSale), rescue(salesController.update));
 
-route.post('/', authSale, salesController.create);
+route.post('/', rescue(authSale), rescue(salesController.create));
 
-route.get('/', salesController.getAll);
+route.get('/', rescue(salesController.getAll));
 
 module.exports = route;
