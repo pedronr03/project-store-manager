@@ -1,6 +1,6 @@
 # Store Manager
 ### About project:
-This project was created with the aim of managing a store, having control of its stock, creating purchases with various products and etc.
+This project is a REST API and was created with the objective of managing a store, having control of its stock, creating purchases with different products and etc.
 ### How to run:
 - Clone the repository.
 - Run the following commands:
