@@ -17,6 +17,7 @@ MYSQL_PASSWORD=
 MYSQL_DATABASE=
 ```
 ### Built with:
+- [Node.js](https://nodejs.org/en/)
 - [Javascript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
 - [Express](https://expressjs.com/pt-br/)
 - [MySQL](https://www.mysql.com/)
