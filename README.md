@@ -5,21 +5,12 @@ This project is a REST API and was created with the objective of managing a stor
 - Clone the repository.
 - Run the following commands:
 ```
-npm start
+docker-compose up -d
 ```
 ### How to run tests:
 - Run the following commands:
 ```
 npm test
-```
-### Additional informations:
-To run this project, you will need to fill the .env file with the following environment variables:
-```
-PORT=
-MYSQL_HOST=
-MYSQL_USER=
-MYSQL_PASSWORD=
-MYSQL_DATABASE=
 ```
 ### Built with:
 - [Node.js](https://nodejs.org/en/)
